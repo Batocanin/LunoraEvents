@@ -1,0 +1,43 @@
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["omitApi"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String       @id @default(uuid())
+  email    String       @unique
+  password String
+  sessions Session[]
+  Partys Party[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+
+  user      User     @relation(references: [id], fields: [userId])
+}
+
+model Party {
+  id String @id @unique @default(uuid())
+  
+  title String
+  message String?
+  mainPhotoUrl String?
+  backgroundPhotoUrl String?
+  dateEndTime String
+
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(references: [id], fields: [userId])
+}
