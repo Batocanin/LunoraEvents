@@ -2,15 +2,7 @@
 
 import React from "react";
 import { SidebarTrigger } from "../ui/sidebar";
-import SidebarSearch from "./sidebar-search";
-import {
-  BadgeCheck,
-  Bell,
-  CreditCard,
-  LogOut,
-  Mail,
-  Sparkles,
-} from "lucide-react";
+import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,11 +21,9 @@ async function SideBarHeader() {
       <div className="flex items-center justify-between w-full gap-2 px-4">
         <div className="flex items-center w-full gap-3">
           <SidebarTrigger className="-ml-1" />
-          <SidebarSearch />
         </div>
         <div className="flex items-center gap-7">
           <div className="flex gap-5">
-            <Mail className="size-5" />
             <Bell className="size-5" />
             <SidebarTheme />
           </div>

@@ -31,7 +31,7 @@ function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         title: "Proslave",
         url: "/dashboard/party",
         icon: PartyPopper,
-        isActive: pathname === "/dashboard/party",
+        isActive: pathname.includes("party"),
       },
     ],
   };

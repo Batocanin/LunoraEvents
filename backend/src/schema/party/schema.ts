@@ -3,21 +3,10 @@ import { z } from "zod";
 export const optionalString = z.string().trim().optional().or(z.literal(""));
 
 export const PartyInfoSchema = z.object({
-  mainPhoto: z.custom<File>().refine((file) => {
-    return (
-      !file || (file instanceof File && file.type.startsWith("image/")),
-      "Must be an image file"
-    );
-  }),
-  backgroundPhoto: z
-    .custom<File>()
-    .refine(
-      (file) =>
-        !file || (file instanceof File && file.type.startsWith("image/")),
-      "Must be an image file"
-    ),
-  title: z.string().trim(),
-  message: z.string().trim(),
+  mainPhoto: z.custom<File>(),
+  backgroundPhoto: z.custom<File>(),
+  title: z.string().trim().optional(),
+  message: z.string().trim().optional(),
   dateEndTime: z.string().trim(),
 });
 
@@ -32,7 +21,6 @@ export type PartyValues = Partial<
 > & {
   mainPhoto?: File | string | null;
   backgroundPhoto?: File | string | null;
-  id?: string;
   dateEndTime: string;
-  title: string;
+  id?: string;
 };

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Camera, Heart } from "lucide-react";
 import Image from "next/image";
-import GalleryImage from "./GalleryImage";
+import GalleryImage from "../../../../../components/GalleryImage";
 
 const images = [
   {

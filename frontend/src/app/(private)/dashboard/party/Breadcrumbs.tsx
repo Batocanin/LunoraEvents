@@ -7,14 +7,20 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { steps } from "./steps";
+
+type stepsType = {
+  title: string;
+  component: React.ComponentType<any>;
+  key: string;
+};
 
 interface BreadcrumbsProps {
   currentStep: string;
   setCurrentStep: (step: string) => void;
+  steps: stepsType[];
 }
 
-function Breadcrumbs({ currentStep, setCurrentStep }: BreadcrumbsProps) {
+function Breadcrumbs({ currentStep, setCurrentStep, steps }: BreadcrumbsProps) {
   return (
     <div className="flex justify-center">
       <Breadcrumb>

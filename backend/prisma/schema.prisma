@@ -10,11 +10,13 @@ datasource db {
 }
 
 model User {
-  id       String       @id @default(uuid())
+  id       String       @id @unique @default(uuid())
   email    String       @unique
   password String
   sessions Session[]
   Partys Party[]
+
+  @@map("user")
 }
 
 model Session {
@@ -23,21 +25,102 @@ model Session {
   expiresAt DateTime
 
   user      User     @relation(references: [id], fields: [userId])
+
+  @@map("user_session")
 }
 
 model Party {
-  id String @id @unique @default(uuid())
+  id String @id @unique
   
-  title String
+  title String?
   message String?
-  mainPhotoUrl String?
-  backgroundPhotoUrl String?
+  mainPhoto String?
+  backgroundPhoto String?
   dateEndTime String
+  active Boolean @default(true)
+  slug String? @unique
 
   userId String
+  settingsId String @unique
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  photos PartyMedia[]
+  zips PartyZip[]
+
+  settings PartySettings @relation(references: [id], fields: [settingsId])
   user      User     @relation(references: [id], fields: [userId])
+
+  @@map("party")
+}
+
+model PartyMedia {
+  id String @unique @default(cuid())
+  url String @unique
+  width Int
+  height Int
+  type String
+  deleted Boolean @default(false)
+
+  partyId String
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  party Party @relation(references: [id], fields: [partyId])
+
+  @@map("party_media")
+}
+
+model PartySettings {
+  id String @id @default(cuid())
+  themeColor String @default("#e11d48")
+  showBrand Boolean @default(true)
+  viewUpload UploadEnum @default(VIEWUPLOAD)
+  allowDownload Boolean @default(true)
+  manualApproval Boolean @default(false)
+  slideshowQR Boolean @default(true)
+  allowMedia AllowMediaEnum @default(BOTH)
+
+  party Party?
+
+  updatedAt DateTime @updatedAt
+
+  @@map("party_settings")
+}
+
+model PartyZip {
+  id String @id @default(cuid())
+  url String @unique
+  status PartyZipStatusEnum @default(PENDING)
+
+  partyId String
+
+  party Party @relation(references: [id], fields: [partyId])
+
+  updatedAt DateTime @updatedAt 
+  createdAt DateTime @default(now())
+
+  @@map("party_zip")
+}
+
+enum PartyZipStatusEnum {
+  PENDING
+  IN_PROGRESS
+  COMPLETE
+}
+
+enum AllowMediaEnum {
+  IMAGE
+  VIDEO
+  BOTH
+}
+
+enum UploadEnum {
+  VIEWUPLOAD
+  UPLOAD
+  VIEW
 }

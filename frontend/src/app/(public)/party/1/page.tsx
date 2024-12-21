@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button";
 import { ImageIcon, MessageCircleHeart } from "lucide-react";
 import Image from "next/image";
 
-async function page({ params }: { params: Promise<{ partyId: string }> }) {
-  const { partyId } = await params;
+async function page() {
   return (
-    <div className="md:py-12 h-full min-h-dvh">
+    <div className="h-full min-h-dvh">
       <div className="relative flex flex-col w-full h-full max-w-xl mx-auto shadow-lg">
         <div className="relative aspect-square">
           <Image

@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import LoginForm from "./LoginForm";
 
+export const dynamic = "force-dynamic";
+
 export default function page() {
   return (
     <div className="w-full lg:grid h-screen lg:grid-cols-2">

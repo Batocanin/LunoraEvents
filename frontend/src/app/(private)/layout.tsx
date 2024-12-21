@@ -7,8 +7,12 @@ import { isRedirectError } from "next/dist/client/components/redirect";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import SideBarHeader from "@/components/SidebarHeader/sidebar-header";
 import AppSidebar from "@/components/app-sidebar";
+import { cookies } from "next/headers";
+import CookieAuthProvider from "../CookiesProvider";
 
 async function layout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("session");
   try {
     const {
       data: { user, session },
@@ -18,13 +22,15 @@ async function layout({ children }: { children: React.ReactNode }) {
 
     return (
       <SessionProvider value={{ user, session }}>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <SideBarHeader />
-            <div className="px-4 py-6">{children}</div>
-          </SidebarInset>
-        </SidebarProvider>
+        <CookieAuthProvider value={sessionCookie}>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              <SideBarHeader />
+              <div className="h-full">{children}</div>
+            </SidebarInset>
+          </SidebarProvider>
+        </CookieAuthProvider>
       </SessionProvider>
     );
   } catch (error) {

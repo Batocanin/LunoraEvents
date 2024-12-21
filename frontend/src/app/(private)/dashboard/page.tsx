@@ -12,7 +12,7 @@ import { EllipsisVertical, Folder, Image, Video } from "lucide-react";
 
 async function page() {
   return (
-    <div>
+    <div className="px-4 py-6">
       <h1 className="text-2xl font-bold mb-4">Početna</h1>
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-4">
