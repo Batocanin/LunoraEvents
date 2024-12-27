@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Download, ImageUp, Trash, Upload } from "lucide-react";
+import { CircleCheck, ImageUp, Loader2, Upload } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -15,31 +15,18 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { FilesToUploadGallery, Party, PartyZipProp } from "@/lib/types";
+import { FilesToUploadGallery, Party } from "@/lib/types";
 import { nanoid } from "nanoid";
-import useDownloadAllFiles from "../../../mutations/useDownloadAllMedia";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import useGetPartyZipFiles from "../../../mutations/useGetPartyZipFiles";
-import Link from "next/link";
-import useUploadPartyMedia from "../../../mutations/useUploadImageVideoMutation";
+import useUploadPartyMedia from "../hooks/useUploadMediaMutation";
+import PartyMediaZipDialog from "./PartyMediaZipDialog";
+import { handleMutationOptimisticallyUpdate } from "../../settings/shared/utils/handleMutationOptimisticallyUpdate";
+import PartyMediaDeleteButton from "./PartyMediaDeleteButton";
 
 function PartyMediaUploadDialog({ partyData }: { partyData: Party }) {
+  const [zipDialogOpen, setIsZipDialogOpen] = useState(false);
   const [progressMap, setProgressMap] = useState<Record<string, number>>({});
 
   const uploadMutation = useUploadPartyMedia(partyData, setProgressMap);
-  const zipMediaMutation = useDownloadAllFiles(partyData.id);
-  const {
-    data: zipMediaData,
-    isPending,
-    isError,
-  } = useGetPartyZipFiles(partyData.id);
 
   const queryClient = useQueryClient();
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -52,11 +39,16 @@ function PartyMediaUploadDialog({ partyData }: { partyData: Party }) {
       status: "uploading",
     }));
 
-    queryClient.setQueryData(
+    handleMutationOptimisticallyUpdate<FilesToUploadGallery[]>(
+      queryClient,
       ["adminUploads"],
-      (oldUploads: FilesToUploadGallery[] = []) => [
+      (oldUploads = []) => [
         ...oldUploads,
-        ...filesWithIds,
+        ...filesWithIds.map((file) => ({
+          ...file,
+          previewUrl: file.previewUrl || "",
+          status: file.status as "uploading",
+        })),
       ]
     );
 
@@ -134,18 +126,34 @@ function PartyMediaUploadDialog({ partyData }: { partyData: Party }) {
                           <h3 className="text-sm break-all text-muted-foreground">
                             {uploadedFile.file.name}
                           </h3>
-                          <div className="bg-primary p-1.5 rounded-full cursor-pointer">
-                            <Trash className="size-4 stroke-white" />
-                          </div>
+                          {uploadedFile.status === "completed" && (
+                            <PartyMediaDeleteButton
+                              partyId={partyData.id}
+                              url={uploadedFile.serverUrl}
+                              mediaId={uploadedFile.id}
+                            />
+                          )}
                         </div>
                         <div className="flex items-center gap-2">
                           <Progress
                             value={progressMap[uploadedFile.id]}
                             className="w-[90%]"
+                            indicatorClassName={
+                              uploadedFile.status === "completed"
+                                ? "bg-green-400"
+                                : ""
+                            }
                           />
-                          <span className="text-sm">
-                            {progressMap[uploadedFile.id]}
-                          </span>
+                          {progressMap[uploadedFile.id] === 100 &&
+                          uploadedFile.status !== "completed" ? (
+                            <Loader2 className="animate-spin size-4 ml-2 stroke-primary" />
+                          ) : uploadedFile.status === "completed" ? (
+                            <CircleCheck className="stroke-green-400 size-6 ml-2" />
+                          ) : (
+                            <span className="text-sm">
+                              {progressMap[uploadedFile.id]}%
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -155,36 +163,11 @@ function PartyMediaUploadDialog({ partyData }: { partyData: Party }) {
           </div>
         </DialogContent>
       </Dialog>
-      <div className="relative flex items-center gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              className="hover:bg-transparent hover:text-secondary/80"
-              variant="ghost"
-            >
-              <Download /> Skini sve slike i snimke
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Slike i snimci</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => zipMediaMutation.mutate()}>
-              Generiši novi zip
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            {zipMediaData?.map((media: PartyZipProp) => (
-              <DropdownMenuItem key={media.id}>
-                <Link
-                  download
-                  href={`${process.env.NEXT_PUBLIC_S3_URL}/${media.url}`}
-                >
-                  {media.id}
-                </Link>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <PartyMediaZipDialog
+        partyId={partyData.id}
+        zipDialogOpen={zipDialogOpen}
+        setIsZipDialogOpen={setIsZipDialogOpen}
+      />
     </div>
   );
 }

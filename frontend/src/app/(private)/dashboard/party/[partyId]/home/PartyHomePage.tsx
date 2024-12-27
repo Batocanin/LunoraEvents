@@ -2,10 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Party } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
+import useDownloadPartyPhoto from "../../shared/hooks/useDownloadPartyPhoto";
 
 function PartyHomePage({ partyData }: { partyData: Party }) {
   const { id: partyId, title } = partyData;
   const partyPageUrl = `${process.env.NEXT_PUBLIC_BASE_APP_URL}/party/${partyId}`;
+
+  const useDownloadPartyPhotoMutation = useDownloadPartyPhoto(partyId);
 
   return (
     <div className="space-y-8">
@@ -55,9 +58,17 @@ function PartyHomePage({ partyData }: { partyData: Party }) {
                   />
                 </div>
               </div>
-              <Link href="" download="aaf">
-                <Button className="shadow-lg">Skini QR kod</Button>
-              </Link>
+              <Button
+                className="shadow-lg"
+                onClick={() =>
+                  useDownloadPartyPhotoMutation.mutate({
+                    key: `party/${partyId}/QRCode`,
+                    type: "image/png",
+                  })
+                }
+              >
+                Skini QR kod
+              </Button>
             </div>
             <div
               className="relative mx-auto my-4"

@@ -16,7 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import PartySettingsUpgradePlanDialog from "../../settings/components/PartySettingsUpgradePlanDialog";
+import PartySettingsUpgradePlanDialog from "../../../shared/components/PartySettingsUpgradePlanDialog";
 
 function PartyMediaUploadChart() {
   const chartData = [

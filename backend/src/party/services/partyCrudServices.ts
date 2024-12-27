@@ -7,7 +7,7 @@ import { AppError } from "../../utils/customError";
 import { generatePresignedDownloadUrlFromR2 } from "../utils/generatePresignedDownloadUrlFromR2";
 import path from "path";
 import { nanoid } from "nanoid";
-import { generatePresignedUploadUrlFromR2 } from "../utils/generatePResignedUploadUrlFromR2";
+import { generatePresignedUploadUrlFromR2 } from "../utils/generatePresignedUploadUrlFromR2";
 
 const S3Client = getS3Client();
 

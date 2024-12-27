@@ -1,14 +1,20 @@
 import { Router } from "express";
 import { validateRequest } from "../../controllers/Auth";
 import {
+  activePartyMediaHandler,
+  archivePartyMediaHandler,
   completePartyMediaMultiPartUploadHandler,
   createPartyMediaHandler,
   createPartyMediaMultiPartUploadHandler,
   createPartyPageMediaHandler,
   deletePartyMediaHandler,
   generatePartyZipMediaHandler,
-  getPartyMediasListHandler,
+  getPartyApprovedMediasHandler,
+  getPartyArchivedMediasHandler,
+  getPartyMediasHandler,
+  getPartyPendingMediasHandler,
   getPartyZipMediaHandler,
+  unarchivePartyMediaHandler,
 } from "../controllers/partyMediaHandler";
 import { checkPartyOwnership } from "../controllers/partyCrudHandler";
 
@@ -37,7 +43,43 @@ partyMediaRouter.get(
   "/getPartyMedias/:partyId",
   validateRequest,
   checkPartyOwnership,
-  getPartyMediasListHandler
+  getPartyMediasHandler
+);
+partyMediaRouter.get(
+  "/getPartyApprovedMedias/:partyId",
+  validateRequest,
+  checkPartyOwnership,
+  getPartyApprovedMediasHandler
+);
+partyMediaRouter.get(
+  "/getPartyPendingMedias/:partyId",
+  validateRequest,
+  checkPartyOwnership,
+  getPartyPendingMediasHandler
+);
+partyMediaRouter.get(
+  "/getPartyArchivedMedias/:partyId",
+  validateRequest,
+  checkPartyOwnership,
+  getPartyArchivedMediasHandler
+);
+partyMediaRouter.post(
+  "/archivePartyMedia",
+  validateRequest,
+  checkPartyOwnership,
+  archivePartyMediaHandler
+);
+partyMediaRouter.post(
+  "/unarchivePartyMedia",
+  validateRequest,
+  checkPartyOwnership,
+  unarchivePartyMediaHandler
+);
+partyMediaRouter.post(
+  "/activePartyMedia",
+  validateRequest,
+  checkPartyOwnership,
+  activePartyMediaHandler
 );
 partyMediaRouter.post(
   "/createPartyMultiPartUpload",

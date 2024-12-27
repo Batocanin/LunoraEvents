@@ -2,15 +2,22 @@
 
 import { Home, Image, Loader2, Settings, X } from "lucide-react";
 import { useParams, useSearchParams } from "next/navigation";
-import useGetParty from "../mutations/useGetParty";
+import useGetParty from "../hooks/useGetParty";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { settingsSteps } from "../steps";
-import PartySettingsFreePlanAlert from "./settings/components/PartySettingsFreePlanAlert";
+import { settingsSteps } from "../shared/utils/steps";
+import PartySettingsFreePlanAlert from "../shared/components/PartySettingsFreePlanAlert";
+import { Button } from "@/components/ui/button";
 
 function Page() {
   const { partyId } = useParams();
   const searchParams = useSearchParams();
-  const { data: partyData, isPending, isError, error } = useGetParty(partyId);
+  const {
+    data: partyData,
+    isPending,
+    isError,
+    error,
+    refetch,
+  } = useGetParty(partyId);
 
   if (isPending) {
     return (
@@ -24,6 +31,20 @@ function Page() {
     return (
       <div className="flex h-full items-center justify-center">
         {error.response?.data.successMessage}
+      </div>
+    );
+  }
+
+  if (!partyData) {
+    return (
+      <div className="flex h-full items-center justify-center text-center">
+        <div>
+          <p>
+            Dogodila se greska prilikom ucitavanja podataka, pokušajte ponovo
+            kasnije ili nas kontaktirajte.
+          </p>
+          <Button onClick={refetch}>Pokušajte ponovo</Button>
+        </div>
       </div>
     );
   }

@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { createPartySteps } from "../steps";
-import Breadcrumbs from "../Breadcrumbs";
+import { createPartySteps } from "../shared/utils/steps";
+import Breadcrumbs from "../shared/components/Breadcrumbs";
 import PartyCreateDesignFooter from "./PartyCreateDesignFooter";
 import {
   PartyInfoSchema,

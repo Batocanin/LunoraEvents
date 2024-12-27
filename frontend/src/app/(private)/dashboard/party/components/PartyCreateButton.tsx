@@ -10,7 +10,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { PartyPopper } from "lucide-react";
 import PartyCreateDesignModal from "./PartyCreateDesignModal";
 import { Button } from "@/components/ui/button";
-import useCreatePartyMutation from "../mutations/useCreatePartyMutation";
+import useCreatePartyMutation from "../hooks/useCreatePartyMutation";
 import { useState } from "react";
 import { PartyValues } from "@/lib/validation";
 

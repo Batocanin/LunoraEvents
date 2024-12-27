@@ -5,6 +5,10 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { PartyMediaProp } from "@/lib/types";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { PartyMediaGalleryCarouselList } from "./PartyMediaGalleryCarouselList";
+import {
+  InfiniteData,
+  InfiniteQueryObserverResult,
+} from "@tanstack/react-query";
 
 export function PartyMediaGalleryCarousel({
   media,
@@ -12,12 +16,20 @@ export function PartyMediaGalleryCarousel({
   setIsDialogOpen,
   currentImageIndex,
   partyId,
+  isFetching,
+  hasNextPage,
+  fetchNextPage,
 }: {
   media: PartyMediaProp[];
   isDialogOpen: boolean;
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   currentImageIndex: number;
   partyId: string;
+  isFetching: boolean;
+  hasNextPage: boolean;
+  fetchNextPage: () => Promise<
+    InfiniteQueryObserverResult<InfiniteData<any, unknown>, Error>
+  >;
 }) {
   const [currentSize, setCurrentSize] = useState({
     width: media[currentImageIndex]?.width,
@@ -79,6 +91,9 @@ export function PartyMediaGalleryCarousel({
           currentImageIndex={currentImageIndex}
           onSlideChange={handleSlideChange}
           partyId={partyId}
+          isFetching={isFetching}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
         />
       </DialogContent>
     </Dialog>

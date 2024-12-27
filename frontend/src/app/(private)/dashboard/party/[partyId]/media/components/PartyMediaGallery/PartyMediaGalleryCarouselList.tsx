@@ -2,17 +2,26 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EmblaOptionsType } from "embla-carousel";
+import { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import PartyMediaGalleryCarouselImage from "./PartyMediaGalleryCarouselImage";
 import { PartyMediaProp } from "@/lib/types";
+import {
+  InfiniteData,
+  InfiniteQueryObserverResult,
+} from "@tanstack/react-query";
 
 interface PartyMediaGalleryCarouselListProps {
   images: PartyMediaProp[];
   onSlideChange: (width: number, height: number) => void;
   currentImageIndex: number;
   partyId: string;
+  isFetching: boolean;
+  hasNextPage: boolean;
+  fetchNextPage: () => Promise<
+    InfiniteQueryObserverResult<InfiniteData<any, unknown>, Error>
+  >;
 }
 
 export function PartyMediaGalleryCarouselList({
@@ -20,6 +29,9 @@ export function PartyMediaGalleryCarouselList({
   onSlideChange,
   currentImageIndex,
   partyId,
+  isFetching,
+  hasNextPage,
+  fetchNextPage,
 }: PartyMediaGalleryCarouselListProps) {
   const options: EmblaOptionsType = {
     loop: false,
@@ -31,14 +43,14 @@ export function PartyMediaGalleryCarouselList({
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
   const onSlideChangeRef = useRef(onSlideChange);
 
-  const scrollPrev = useCallback(
-    () => emblaApi && emblaApi.scrollPrev(),
-    [emblaApi]
-  );
-  const scrollNext = useCallback(
-    () => emblaApi && emblaApi.scrollNext(),
-    [emblaApi]
-  );
+  const scrollPrev = useCallback(() => {
+    emblaApi && emblaApi.scrollPrev();
+  }, [emblaApi]);
+  const scrollNext = useCallback(() => {
+    if (isFetching) return;
+    emblaApi && emblaApi.scrollNext();
+    if (shouldLoadNextPage(emblaApi, hasNextPage)) fetchNextPage();
+  }, [emblaApi]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -59,6 +71,7 @@ export function PartyMediaGalleryCarouselList({
     if (!emblaApi) return;
     setPrevBtnEnabled(emblaApi.canScrollPrev());
     setNextBtnEnabled(emblaApi.canScrollNext());
+    if (shouldLoadNextPage(emblaApi, hasNextPage)) fetchNextPage();
     const currentSlide = emblaApi.selectedScrollSnap();
     onSlideChangeRef.current(
       images[currentSlide]?.width,
@@ -72,6 +85,7 @@ export function PartyMediaGalleryCarouselList({
 
   useEffect(() => {
     if (!emblaApi) return;
+    if (isFetching) return;
 
     emblaApi.on("select", onSelect);
     emblaApi.on("init", onSelect);
@@ -111,10 +125,26 @@ export function PartyMediaGalleryCarouselList({
         size="icon"
         className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/70"
         onClick={scrollNext}
-        disabled={!nextBtnEnabled}
+        disabled={isFetching && hasNextPage}
       >
-        <ChevronRight className="h-4 w-4" />
+        {isFetching ? (
+          <Loader2 className="aniamte-spin h-4 w-4" />
+        ) : (
+          <ChevronRight className="h-4 w-4" />
+        )}
       </Button>
     </div>
   );
 }
+
+const shouldLoadNextPage = (
+  emableApi: EmblaCarouselType | undefined,
+  hasNextPage: boolean
+) => {
+  if (!emableApi || !hasNextPage) return false;
+
+  const isLastSlide =
+    emableApi.selectedScrollSnap() === emableApi.scrollSnapList().length - 1;
+  console.log(isLastSlide);
+  return isLastSlide;
+};

@@ -48,8 +48,8 @@ export interface PartySettings {
 
 export type FilesToUpload = {
   fileName: string;
-  file: File;
-  fileType: string;
+  file?: File;
+  fileType?: string;
   type: string;
 };
 
@@ -68,7 +68,8 @@ export interface PartyMediaProp {
   width: number;
   height: number;
   type: string;
-  deleted: boolean;
+  pending: boolean;
+  archived: boolean;
   partyId: string;
   createdAt: string;
   updatedAt: string;

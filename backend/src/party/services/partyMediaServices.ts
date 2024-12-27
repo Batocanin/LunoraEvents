@@ -1,12 +1,18 @@
 import path from "path";
 import { AppError } from "../../utils/customError";
 import {
+  activePartyMediaByMediaId,
+  archivePartyMediaByMediaId,
   checkInProgressPartyMediaZip,
   createPartyMediaById,
   deletePartyMediaByMediaId,
   generatePartyMediaZipByPartyId,
-  getPartyMediasListByPartyId,
+  getPartyApprovedMediasByPartyId,
+  getPartyArchivedMediasByPartyId,
+  getPartyMediasByPartyId,
   getPartyMediaZipByPartyId,
+  getPartyPendingMediasByPartyId,
+  unarchivePartyMediaByMediaId,
   updatePartyPageMediaByPartyId,
 } from "../models/partyMediaModel";
 import { deletePartyMediaFromR2 } from "../utils/deleteMediaFromR2";
@@ -96,7 +102,8 @@ export const createPartyMedia = async (
   key: string,
   width: number,
   height: number,
-  type: string
+  type: string,
+  pending: boolean
 ) => {
   await resizeImage(key, type);
 
@@ -105,19 +112,14 @@ export const createPartyMedia = async (
     key,
     width,
     height,
-    type
+    type,
+    pending
   );
 
   if (!createdPartyMedia) throw new AppError("Party nije pronadjen.");
 
   return createdPartyMedia;
 };
-export const updatePartyPageMedia = async (
-  presignedUrls: presignedUrls[],
-  partyId: string,
-  mainPhoto: string,
-  backgroundPhoto: string
-) => {};
 
 export const deletePartyMedia = async (key: string, mediaId: string) => {
   if (!key) throw new AppError("Key je obavezan.");
@@ -131,7 +133,7 @@ export const deletePartyMedia = async (key: string, mediaId: string) => {
   return deletedPartyMedia;
 };
 
-export const getPartyMediasList = async (
+export const getPartyMedias = async (
   partyId: string,
   limit: string | undefined,
   cursor: string | null
@@ -140,7 +142,7 @@ export const getPartyMediasList = async (
 
   const formattedLimit = Number(limit);
 
-  const partyMedias = await getPartyMediasListByPartyId(
+  const partyMedias = await getPartyMediasByPartyId(
     partyId,
     formattedLimit,
     cursor
@@ -149,6 +151,87 @@ export const getPartyMediasList = async (
   if (!partyMedias) throw new AppError("Party Medias nije pronadjena.");
 
   return partyMedias;
+};
+export const getPartyApprovedMedias = async (
+  partyId: string,
+  limit: string | undefined,
+  cursor: string | null
+) => {
+  if (!limit) throw new AppError("Limit je obavezan.");
+
+  const formattedLimit = Number(limit);
+
+  const partyMedias = await getPartyApprovedMediasByPartyId(
+    partyId,
+    formattedLimit,
+    cursor
+  );
+
+  if (!partyMedias) throw new AppError("Party Medias nije pronadjena.");
+
+  return partyMedias;
+};
+export const getPartyPendingMedias = async (
+  partyId: string,
+  limit: string | undefined,
+  cursor: string | null
+) => {
+  if (!limit) throw new AppError("Limit je obavezan.");
+
+  const formattedLimit = Number(limit);
+
+  const partyMedias = await getPartyPendingMediasByPartyId(
+    partyId,
+    formattedLimit,
+    cursor
+  );
+
+  if (!partyMedias) throw new AppError("Party Medias nije pronadjena.");
+
+  return partyMedias;
+};
+export const getPartyArchivedMedias = async (
+  partyId: string,
+  limit: string | undefined,
+  cursor: string | null
+) => {
+  if (!limit) throw new AppError("Limit je obavezan.");
+
+  const formattedLimit = Number(limit);
+
+  const partyMedias = await getPartyArchivedMediasByPartyId(
+    partyId,
+    formattedLimit,
+    cursor
+  );
+
+  if (!partyMedias) throw new AppError("Party Medias nije pronadjena.");
+
+  return partyMedias;
+};
+
+export const archivePartyMedia = async (mediaId: string) => {
+  const archivedPartyMedia = await archivePartyMediaByMediaId(mediaId);
+
+  if (!archivedPartyMedia) throw new AppError("Party Media nije pronadjena.");
+
+  return archivedPartyMedia;
+};
+
+export const unarchivePartyMedia = async (mediaId: string) => {
+  const unarchivedPartyMedia = await unarchivePartyMediaByMediaId(mediaId);
+
+  if (!unarchivedPartyMedia) throw new AppError("Party Media nije pronadjena.");
+
+  return unarchivedPartyMedia;
+};
+
+export const activePartyMedia = async (mediaId: string) => {
+  const activedPartyMedia = await activePartyMediaByMediaId(mediaId);
+
+  if (!activedPartyMedia) throw new AppError("Party Media nije pronadjena.");
+
+  return activedPartyMedia;
 };
 
 export const generatePartyZipMedia = async (partyId: string) => {
@@ -230,7 +313,8 @@ export const completePartyMediaMultiPartUpload = async (
   parts: any,
   width: number,
   height: number,
-  type: string
+  type: string,
+  pending: boolean
 ) => {
   if (!key || !UploadId || !parts || !Array.isArray(parts))
     throw new AppError("Key, UploadID, Parts su obavezni!");
@@ -251,7 +335,8 @@ export const completePartyMediaMultiPartUpload = async (
     key,
     width,
     height,
-    type
+    type,
+    pending
   );
 
   return createdPartyMedia;

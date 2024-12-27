@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { createPartySteps } from "../steps";
+import { createPartySteps } from "../shared/utils/steps";
 import { Button } from "@/components/ui/button";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";

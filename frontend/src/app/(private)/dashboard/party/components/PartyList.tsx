@@ -1,7 +1,7 @@
 "use client";
 
 import { ImageIcon, Loader2, MessageCircleHeart } from "lucide-react";
-import useGetAllParties from "../mutations/useGetAllParties";
+import useGetAllParties from "../hooks/useGetAllParties";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

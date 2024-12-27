@@ -57,12 +57,13 @@ model Party {
 }
 
 model PartyMedia {
-  id String @unique @default(cuid())
+  id String  @id @unique @default(cuid())
   url String @unique
   width Int
   height Int
   type String
-  deleted Boolean @default(false)
+  pending Boolean
+  archived Boolean @default(false)
 
   partyId String
   

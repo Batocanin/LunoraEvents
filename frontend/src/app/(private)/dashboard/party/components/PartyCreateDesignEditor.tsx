@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import PartyCreateDesignForm from "../forms/PartyCreateDesignForm";
+import PartyCreateDesignForm from "./PartyCreateDesignForm";
 import PartyCreateDesignPreview from "./PartyCreateDesignPreview";
 import { PartyInfoValues, PartyValues } from "@/lib/validation";
 import { useForm } from "react-hook-form";

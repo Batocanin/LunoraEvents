@@ -29,7 +29,8 @@ export const createPartyMediaById = async (
   key: string,
   width: number,
   height: number,
-  type: string
+  type: string,
+  pending: boolean
 ) => {
   const createdPartyMedia = await prisma.partyMedia.create({
     data: {
@@ -38,6 +39,7 @@ export const createPartyMediaById = async (
       width,
       height,
       type,
+      pending,
     },
   });
 
@@ -64,7 +66,7 @@ export const getPartyMediasById = async (partyId: string) => {
   return partyMedias;
 };
 
-export const getPartyMediasListByPartyId = async (
+export const getPartyMediasByPartyId = async (
   partyId: string,
   limit: number,
   cursor: string | null
@@ -82,7 +84,112 @@ export const getPartyMediasListByPartyId = async (
 
   const nextCursor = partyMedias.length > limit ? partyMedias[limit].id : null;
 
-  return { partyMedias, nextCursor };
+  return { partyMedias: partyMedias.slice(0, limit), nextCursor };
+};
+export const getPartyApprovedMediasByPartyId = async (
+  partyId: string,
+  limit: number,
+  cursor: string | null
+) => {
+  const partyMedias = await prisma.partyMedia.findMany({
+    where: {
+      partyId,
+      pending: false,
+      archived: false,
+    },
+    take: Number(limit) + 1,
+    cursor: cursor ? { id: cursor } : undefined,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const nextCursor = partyMedias.length > limit ? partyMedias[limit].id : null;
+
+  return { partyMedias: partyMedias.slice(0, limit), nextCursor };
+};
+export const getPartyPendingMediasByPartyId = async (
+  partyId: string,
+  limit: number,
+  cursor: string | null
+) => {
+  const partyMedias = await prisma.partyMedia.findMany({
+    where: {
+      partyId,
+      pending: true,
+      archived: false,
+    },
+    take: Number(limit) + 1,
+    cursor: cursor ? { id: cursor } : undefined,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const nextCursor = partyMedias.length > limit ? partyMedias[limit].id : null;
+
+  return { partyMedias: partyMedias.slice(0, limit), nextCursor };
+};
+export const getPartyArchivedMediasByPartyId = async (
+  partyId: string,
+  limit: number,
+  cursor: string | null
+) => {
+  const partyMedias = await prisma.partyMedia.findMany({
+    where: {
+      partyId,
+      pending: false,
+      archived: true,
+    },
+    take: Number(limit) + 1,
+    cursor: cursor ? { id: cursor } : undefined,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const nextCursor = partyMedias.length > limit ? partyMedias[limit].id : null;
+
+  return { partyMedias: partyMedias.slice(0, limit), nextCursor };
+};
+
+export const archivePartyMediaByMediaId = async (mediaId: string) => {
+  const archivedPartyMedia = await prisma.partyMedia.update({
+    where: {
+      id: mediaId,
+    },
+    data: {
+      archived: true,
+    },
+  });
+
+  return archivedPartyMedia;
+};
+
+export const unarchivePartyMediaByMediaId = async (mediaId: string) => {
+  const unarchivedPartyMedia = await prisma.partyMedia.update({
+    where: {
+      id: mediaId,
+    },
+    data: {
+      archived: false,
+    },
+  });
+
+  return unarchivedPartyMedia;
+};
+
+export const activePartyMediaByMediaId = async (mediaId: string) => {
+  const activedPartyMedia = await prisma.partyMedia.update({
+    where: {
+      id: mediaId,
+    },
+    data: {
+      pending: false,
+    },
+  });
+
+  return activedPartyMedia;
 };
 
 export const generatePartyMediaZipByPartyId = async (

@@ -42,11 +42,13 @@ function PartyMediaGallery({
 
   // Dodati loading skeleton
   if (status === "pending")
-    return <Loader2 className="mx-auto animate-spin stroke-primary size-8 " />;
+    return (
+      <Loader2 className="mx-auto animate-spin stroke-primary size-6 min-h-96" />
+    );
 
   if (status === "success" && !imageVideoLength && !hasNextPage) {
     return (
-      <p className="text-center text-muted-foreground py-6">
+      <p className="text-center text-muted-foreground py-6 min-h-96">
         Nema pronadjenih slika ili snimaka.
       </p>
     );
@@ -54,7 +56,7 @@ function PartyMediaGallery({
 
   if (status === "error") {
     return (
-      <p className="text-center text-destructive">
+      <p className="text-center text-destructive  min-h-96">
         Dogodila se greska, pokusajte ponovo kasnije ili nas kontaktirajte!
       </p>
     );
@@ -71,6 +73,7 @@ function PartyMediaGallery({
               <PartyMediaGalleryImage
                 key={image.id}
                 photo={image}
+                partyId={partyId}
                 onClick={() => openDialog(index)}
               />
             );
@@ -91,6 +94,9 @@ function PartyMediaGallery({
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
           currentImageIndex={currentImageIndex}
+          isFetching={isFetching}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
           partyId={partyId}
         />
       </div>

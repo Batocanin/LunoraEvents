@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Party } from "@/lib/types";
-import ApperancePage from "./pages/ApperancePage";
-import AdminSettingsPage from "./pages/AdminSettingsPage";
-import GeneralSettingsPage from "./pages/GeneralSettingsPage";
+import Apperance from "./Apperance/Apperance";
+import GeneralSettings from "./GeneralSettings/GeneralSettings";
+import AdminSettings from "./AdminSettings/AdminSettings";
 
 function PartySettingsPage({ partyData }: { partyData: Party }) {
   return (
@@ -12,16 +12,16 @@ function PartySettingsPage({ partyData }: { partyData: Party }) {
         <TabsList className="flex flex-wrap h-auto gap-y-4 mt-2 w-fit">
           <TabsTrigger value="settings">Opšta podešavanja</TabsTrigger>
           <TabsTrigger value="" asChild>
-            <ApperancePage partyData={partyData} />
+            <Apperance partyData={partyData} />
           </TabsTrigger>
           <TabsTrigger value="administration">Administracija</TabsTrigger>
           <TabsTrigger value="sharing">Deljenje</TabsTrigger>
         </TabsList>
         <TabsContent value="settings">
-          <GeneralSettingsPage partyData={partyData} />
+          <GeneralSettings partyData={partyData} />
         </TabsContent>
         <TabsContent value="administration">
-          <AdminSettingsPage partyData={partyData} />
+          <AdminSettings partyData={partyData} />
         </TabsContent>
         <TabsContent value="sharing">Sharing.</TabsContent>
       </Tabs>
