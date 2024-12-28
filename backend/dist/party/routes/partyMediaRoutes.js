@@ -1,0 +1,20 @@
+import { Router } from "express";
+import { validateRequest } from "../../controllers/Auth.js";
+import { activePartyMediaHandler, archivePartyMediaHandler, completePartyMediaMultiPartUploadHandler, createPartyMediaHandler, createPartyMediaMultiPartUploadHandler, createPartyPageMediaHandler, deletePartyMediaHandler, generatePartyZipMediaHandler, getPartyApprovedMediasHandler, getPartyArchivedMediasHandler, getPartyMediasHandler, getPartyPendingMediasHandler, getPartyZipMediaHandler, unarchivePartyMediaHandler, } from "../controllers/partyMediaHandler.js";
+import { checkPartyOwnership } from "../controllers/partyCrudHandler.js";
+export var partyMediaRouter = Router();
+// Samo kada se kreira party se poziva ovo da bi se dodale slike
+partyMediaRouter.post("/createPartyPageMedia", validateRequest, checkPartyOwnership, createPartyPageMediaHandler);
+partyMediaRouter.post("/createPartyMedia", validateRequest, checkPartyOwnership, createPartyMediaHandler);
+partyMediaRouter.post("/deletePartyMedia", validateRequest, checkPartyOwnership, deletePartyMediaHandler);
+partyMediaRouter.get("/getPartyMedias/:partyId", validateRequest, checkPartyOwnership, getPartyMediasHandler);
+partyMediaRouter.get("/getPartyApprovedMedias/:partyId", validateRequest, checkPartyOwnership, getPartyApprovedMediasHandler);
+partyMediaRouter.get("/getPartyPendingMedias/:partyId", validateRequest, checkPartyOwnership, getPartyPendingMediasHandler);
+partyMediaRouter.get("/getPartyArchivedMedias/:partyId", validateRequest, checkPartyOwnership, getPartyArchivedMediasHandler);
+partyMediaRouter.post("/archivePartyMedia", validateRequest, checkPartyOwnership, archivePartyMediaHandler);
+partyMediaRouter.post("/unarchivePartyMedia", validateRequest, checkPartyOwnership, unarchivePartyMediaHandler);
+partyMediaRouter.post("/activePartyMedia", validateRequest, checkPartyOwnership, activePartyMediaHandler);
+partyMediaRouter.post("/createPartyMultiPartUpload", validateRequest, checkPartyOwnership, createPartyMediaMultiPartUploadHandler);
+partyMediaRouter.post("/completeMultiPartUpload", validateRequest, checkPartyOwnership, completePartyMediaMultiPartUploadHandler);
+partyMediaRouter.post("/generatePartyZipMedia", validateRequest, checkPartyOwnership, generatePartyZipMediaHandler);
+partyMediaRouter.get("/getPartyZipMedia/:partyId", validateRequest, checkPartyOwnership, getPartyZipMediaHandler);

@@ -26,9 +26,13 @@ export const createPartyPageMediaHandler = async (
 ) => {
   try {
     const party = req.party;
-    const { presignedUrls } = req.body;
+    const { presignedUrls, partyValues } = req.body;
 
-    const updatedParty = await createPartyPageMedia(party, presignedUrls);
+    const updatedParty = await createPartyPageMedia(
+      party,
+      partyValues,
+      presignedUrls
+    );
 
     res.status(200).send({
       success: true,

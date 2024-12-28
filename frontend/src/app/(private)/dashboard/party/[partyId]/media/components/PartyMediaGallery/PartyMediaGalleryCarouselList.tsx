@@ -138,13 +138,12 @@ export function PartyMediaGalleryCarouselList({
 }
 
 const shouldLoadNextPage = (
-  emableApi: EmblaCarouselType | undefined,
+  emblaApi: EmblaCarouselType | undefined,
   hasNextPage: boolean
 ) => {
-  if (!emableApi || !hasNextPage) return false;
+  if (!emblaApi || !hasNextPage) return false;
 
   const isLastSlide =
-    emableApi.selectedScrollSnap() === emableApi.scrollSnapList().length - 1;
-  console.log(isLastSlide);
+    emblaApi.selectedScrollSnap() === emblaApi.scrollSnapList().length - 1;
   return isLastSlide;
 };

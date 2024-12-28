@@ -7,12 +7,20 @@ import useUpdateViewUpload from "../hooks/useUpdateViewUpload";
 
 function AdminSettingsViewUpload({ partyData }: { partyData: Party }) {
   const updateViewUploadMutation = useUpdateViewUpload(partyData.id);
+
+  const hasPermission = partyData.plan.permissions.some(
+    (permission) => permission.name === "VIEW_UPLOAD"
+  );
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2">
         <h3 className="text-lg font-semibold">Dozvole za digitalni album</h3>
         <div className="flex items-center gap-1">
-          <PartySettingsUpgradePlanDialog xs={true} />
+          <PartySettingsUpgradePlanDialog
+            xs={true}
+            permissions={hasPermission}
+          />
         </div>
       </div>
       <p className="text-muted-foreground text-sm">
@@ -31,6 +39,7 @@ function AdminSettingsViewUpload({ partyData }: { partyData: Party }) {
             checked={
               ViewUploadEnum.VIEWUPLOAD === partyData.settings.viewUpload
             }
+            disabled={!hasPermission}
           />
           <Label
             htmlFor="VIEWUPLOAD"
@@ -50,6 +59,7 @@ function AdminSettingsViewUpload({ partyData }: { partyData: Party }) {
             id="VIEW"
             className="peer sr-only"
             checked={ViewUploadEnum.VIEW === partyData.settings.viewUpload}
+            disabled={!hasPermission}
           />
           <Label
             htmlFor="VIEW"
@@ -70,6 +80,7 @@ function AdminSettingsViewUpload({ partyData }: { partyData: Party }) {
             id="UPLOAD"
             className="peer sr-only"
             checked={ViewUploadEnum.UPLOAD === partyData.settings.viewUpload}
+            disabled={!hasPermission}
           />
           <Label
             htmlFor="UPLOAD"

@@ -61,9 +61,10 @@ function Page() {
 
   const FormComponent = currentStep?.component || settingsSteps[0].component;
 
+  console.log(partyData.plan.variantId);
   return (
     <>
-      <PartySettingsFreePlanAlert />
+      {partyData.plan.variantId === 644675 && <PartySettingsFreePlanAlert />}
       <div className="px-4 py-6">
         <Tabs defaultValue={currentStepKey}>
           <div className="grid justify-center">

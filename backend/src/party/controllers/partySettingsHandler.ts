@@ -60,9 +60,14 @@ export const updatePartyShowBrandHandler = async (
     const {
       id: partyId,
       settings: { showBrand },
+      plan: { permissions },
     } = req.party;
 
-    const updatedParty = await updatePartyShowBrand(partyId, showBrand);
+    const updatedParty = await updatePartyShowBrand(
+      partyId,
+      showBrand,
+      permissions
+    );
 
     res.status(200).send({
       success: true,
@@ -112,11 +117,13 @@ export const updatePartyManualApprovalHandler = async (
     const {
       id: partyId,
       settings: { manualApproval },
+      plan: { permissions },
     } = req.party;
 
     const updatedParty = await updatePartyManualApproval(
       partyId,
-      manualApproval
+      manualApproval,
+      permissions
     );
 
     res.status(200).send({
@@ -138,10 +145,17 @@ export const updatedPartyViewUploadHandler = async (
   res: Response
 ) => {
   try {
-    const { id: partyId } = req.party;
+    const {
+      id: partyId,
+      plan: { permissions },
+    } = req.party;
     const { status } = req.body;
 
-    const updatedParty = await updatePartyViewUpload(partyId, status);
+    const updatedParty = await updatePartyViewUpload(
+      partyId,
+      status,
+      permissions
+    );
 
     res.status(200).send({
       success: true,
@@ -162,10 +176,17 @@ export const updatePartyAllowMediaHandler = async (
   res: Response
 ) => {
   try {
-    const { id: partyId } = req.party;
+    const {
+      id: partyId,
+      plan: { permissions },
+    } = req.party;
     const { status } = req.body;
 
-    const updatedParty = await updatePartyAllowMedia(partyId, status);
+    const updatedParty = await updatePartyAllowMedia(
+      partyId,
+      status,
+      permissions
+    );
 
     res.status(200).send({
       success: true,
@@ -189,9 +210,14 @@ export const updatePartyAllowDownloadHandler = async (
     const {
       id: partyId,
       settings: { allowDownload },
+      plan: { permissions },
     } = req.party;
 
-    const updatedParty = await updatePartyAllowDownload(partyId, allowDownload);
+    const updatedParty = await updatePartyAllowDownload(
+      partyId,
+      allowDownload,
+      permissions
+    );
 
     res.status(200).send({
       success: true,

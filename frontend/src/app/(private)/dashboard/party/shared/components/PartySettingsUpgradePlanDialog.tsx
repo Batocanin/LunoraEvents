@@ -6,10 +6,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { PartyPermission } from "@/lib/types";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Star } from "lucide-react";
 
-function PartySettingsUpgradePlanDialog({ xs }: { xs?: boolean }) {
+function PartySettingsUpgradePlanDialog({
+  xs,
+  permissions,
+  permission,
+}: {
+  xs?: boolean;
+  permissions: PartyPermission[] | boolean;
+  permission?: string;
+}) {
+  if (permissions) return null;
+
+  if (Array.isArray(permissions)) {
+    const hasPermission = permissions.some((perm) => perm.name === permission);
+    console.log(hasPermission);
+    if (hasPermission) return null;
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>

@@ -11,8 +11,12 @@ import { generatePresignedUploadUrlFromR2 } from "../utils/generatePresignedUplo
 
 const S3Client = getS3Client();
 
-export const createParty = async (userId: string, values: PartyValues) => {
-  const createdParty = await createPartyPage(userId, values);
+export const createParty = async (
+  userId: string,
+  variantId: number,
+  partyId?: string
+) => {
+  const createdParty = await createPartyPage(userId, variantId, partyId);
 
   if (!createdParty) throw new AppError("Party nije kreiran.");
 

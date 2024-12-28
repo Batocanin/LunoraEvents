@@ -9,6 +9,7 @@ import PartyMediaGalleryAll from "../../[partyId]/media/components/PartyMediaTab
 import PartyMediaGalleryApproved from "../../[partyId]/media/components/PartyMediaTabs/PartyMediaGalleryApproved";
 import PartyMediaGalleryPending from "../../[partyId]/media/components/PartyMediaTabs/PartyMediaGalleryPending";
 import PartyMediaGalleryArchived from "../../[partyId]/media/components/PartyMediaTabs/PartyMediaGalleryArchived";
+import PartyCreateDesignPricing from "../../components/PartyCreateDesignPricing";
 
 export const editPartySteps: {
   title: string;
@@ -32,7 +33,11 @@ export const createPartySteps: {
     component: PartyCreateDesignEditor,
     key: "create-page",
   },
-  { title: "Party Design", component: Test, key: "party-design" },
+  {
+    title: "Plaćanje",
+    component: PartyCreateDesignPricing,
+    key: "party-pricing",
+  },
 ];
 
 export const partySteps: {

@@ -8,7 +8,13 @@ declare module "express-serve-static-core" {
     party: Prisma.PartyGetPayload<{
       include: {
         settings: true;
+        plan: {
+          include: {
+            permissions: true;
+          };
+        };
       };
     }>;
+    rawBody?: string;
   }
 }

@@ -1,4 +1,4 @@
-import { AllowMediaEnum, UploadEnum } from "@prisma/client";
+import { AllowMediaEnum, Permission, UploadEnum } from "@prisma/client";
 import { AppError } from "../../utils/customError";
 import {
   activePartyById,
@@ -34,8 +34,14 @@ export const deactiveParty = async (partyId: string) => {
 
 export const updatePartyShowBrand = async (
   partyId: string,
-  showBrandStatus: boolean
+  showBrandStatus: boolean,
+  permissions: Permission[]
 ) => {
+  const hasPermission = permissions.some(
+    (permission) => permission.name === "SHOW_BRAND"
+  );
+  if (!hasPermission) throw new AppError("Party nema permisiju.");
+
   const updatedParty = await updatePartyShowBrandById(partyId, showBrandStatus);
 
   if (!updatedParty) throw new AppError("Party nije pronadjen.");
@@ -56,8 +62,14 @@ export const updatePartySlideShowQR = async (
 
 export const updatePartyManualApproval = async (
   partyId: string,
-  manualApprovalStatus: boolean
+  manualApprovalStatus: boolean,
+  permissions: Permission[]
 ) => {
+  const hasPermission = permissions.some(
+    (permission) => permission.name === "MANUAL_APPROVAL"
+  );
+  if (!hasPermission) throw new AppError("Party nema permisiju.");
+
   const updatedParty = await updatePartyManualApprovalById(
     partyId,
     manualApprovalStatus
@@ -70,7 +82,8 @@ export const updatePartyManualApproval = async (
 
 export const updatePartyViewUpload = async (
   partyId: string,
-  viewUploadStatus: UploadEnum
+  viewUploadStatus: UploadEnum,
+  permissions: Permission[]
 ) => {
   if (
     viewUploadStatus !== UploadEnum.VIEWUPLOAD &&
@@ -79,6 +92,11 @@ export const updatePartyViewUpload = async (
   ) {
     throw new AppError("Vrednost view upload status-a je nepostojeća.");
   }
+
+  const hasPermission = permissions.some(
+    (permission) => permission.name === "VIEW_UPLOAD"
+  );
+  if (!hasPermission) throw new AppError("Party nema permisiju.");
 
   const updatedParty = await updatePartyViewUploadById(
     partyId,
@@ -92,7 +110,8 @@ export const updatePartyViewUpload = async (
 
 export const updatePartyAllowMedia = async (
   partyId: string,
-  allowMediaStatus: AllowMediaEnum
+  allowMediaStatus: AllowMediaEnum,
+  permissions: Permission[]
 ) => {
   if (
     allowMediaStatus !== AllowMediaEnum.BOTH &&
@@ -101,6 +120,12 @@ export const updatePartyAllowMedia = async (
   ) {
     throw new AppError("Vrednost allow media status-a je nepostojeća");
   }
+
+  const hasPermission = permissions.some(
+    (permission) => permission.name === "BOTH_MEDIA"
+  );
+
+  if (!hasPermission) throw new AppError("Party nema permisiju.");
 
   const updatedParty = await updatePartyAllowMediaById(
     partyId,
@@ -114,8 +139,14 @@ export const updatePartyAllowMedia = async (
 
 export const updatePartyAllowDownload = async (
   partyId: string,
-  allowDownloadStatus: boolean
+  allowDownloadStatus: boolean,
+  permissions: Permission[]
 ) => {
+  const hasPermission = permissions.some(
+    (permission) => permission.name === "ALLOW_DOWNLOAD"
+  );
+  if (!hasPermission) throw new AppError("Party nema permisiju.");
+
   const updatedParty = await updatePartyAllowDownloadById(
     partyId,
     allowDownloadStatus

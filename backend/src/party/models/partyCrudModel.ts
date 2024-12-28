@@ -1,9 +1,12 @@
 import { nanoid } from "nanoid";
 import prisma from "../../lib/prisma";
-import { PartyValues } from "../../schema/party/schema";
 
-export const createPartyPage = async (userId: string, values: PartyValues) => {
-  const id = nanoid(6);
+export const createPartyPage = async (
+  userId: string,
+  variantId: number,
+  partyId: string | undefined
+) => {
+  const id = partyId || nanoid(6);
   const createdParty = await prisma.party.create({
     data: {
       id,
@@ -12,7 +15,14 @@ export const createPartyPage = async (userId: string, values: PartyValues) => {
           id: userId,
         },
       },
-      ...values,
+      plan: {
+        connect: {
+          variantId: variantId,
+        },
+      },
+      title: "",
+      message: "",
+      dateEndTime: "",
       mainPhoto: undefined,
       backgroundPhoto: undefined,
       settings: {
@@ -30,6 +40,11 @@ export const getPartyByPartyId = async (partyId: string) => {
     },
     include: {
       settings: true,
+      plan: {
+        include: {
+          permissions: true,
+        },
+      },
     },
   });
   return party;

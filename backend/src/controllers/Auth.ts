@@ -109,6 +109,7 @@ export const validateRequest = async (
       });
       return;
     }
+
     req.user = user;
     req.session = session;
     next();

@@ -5,7 +5,6 @@ import { partySettingsRoute } from "./partySettingsRoutes";
 import { updatePartyPageHandler } from "../controllers/partyMediaHandler";
 import {
   checkPartyOwnership,
-  createPartyHandler,
   getAllPartiesHandler,
   getPartyHandler,
   getPresignedDownloadUrlHandler,
@@ -21,7 +20,7 @@ partyRouter.use(
   partySettingsRoute
 );
 
-partyRouter.post("/createParty", validateRequest, createPartyHandler);
+// partyRouter.post("/createParty", validateRequest, createPartyHandler);
 partyRouter.post(
   "/updatePartyPage/:partyId",
   validateRequest,

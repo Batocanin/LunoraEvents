@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { validateRequest } from "../../controllers/Auth.js";
+import { partySettingsRoute } from "./partySettingsRoutes.js";
+import { updatePartyPageHandler } from "../controllers/partyMediaHandler.js";
+import { checkPartyOwnership, getAllPartiesHandler, getPartyHandler, getPresignedDownloadUrlHandler, getPresignedUploadUrlHandler, } from "../controllers/partyCrudHandler.js";
+export var partyRouter = Router();
+partyRouter.use("/settings", validateRequest, checkPartyOwnership, partySettingsRoute);
+// partyRouter.post("/createParty", validateRequest, createPartyHandler);
+partyRouter.post("/updatePartyPage/:partyId", validateRequest, checkPartyOwnership, updatePartyPageHandler);
+partyRouter.get("/getParty/:partyId", validateRequest, checkPartyOwnership, getPartyHandler);
+partyRouter.get("/getAllParties", validateRequest, getAllPartiesHandler);
+partyRouter.post("/getPresignedDownloadUrl", validateRequest, checkPartyOwnership, getPresignedDownloadUrlHandler);
+partyRouter.post("/getPresignedUploadUrl", validateRequest, checkPartyOwnership, getPresignedUploadUrlHandler);

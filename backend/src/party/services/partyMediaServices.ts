@@ -73,6 +73,7 @@ export const updatePartyPage = async (
 // Poziva se samo kod create party-a, da bi se mogle dodaju slike
 export const createPartyPageMedia = async (
   partyData: Party,
+  partyValues: PartyValues,
   presignedUrls: presignedUrls[]
 ) => {
   const mainPhoto = presignedUrls.find(
@@ -89,7 +90,7 @@ export const createPartyPageMedia = async (
 
   const updatedParty = await updatePartyPageMediaByPartyId(
     partyData,
-    undefined,
+    partyValues,
     mainPhoto?.key,
     backgroundPhoto?.key
   );

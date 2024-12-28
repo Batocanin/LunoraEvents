@@ -7,8 +7,13 @@ function AdminSettingsAllowDownload({ partyData }: { partyData: Party }) {
   const {
     id: partyId,
     settings: { allowDownload },
+    plan: { permissions },
   } = partyData;
   const updateAllowDownloadMutation = useUpdateAllowDownload(partyId);
+
+  const hasPermission = permissions.some(
+    (permission) => permission.name === "ALLOW_DOWNLOAD"
+  );
   return (
     <div className="flex items-center gap-12">
       <div className="flex flex-col">
@@ -17,7 +22,10 @@ function AdminSettingsAllowDownload({ partyData }: { partyData: Party }) {
             Onemogući preuzimanje za goste
           </h3>
           <div className="flex items-center gap-1">
-            <PartySettingsUpgradePlanDialog xs={true} />
+            <PartySettingsUpgradePlanDialog
+              xs={true}
+              permissions={hasPermission}
+            />
           </div>
         </div>
         <p className="text-muted-foreground text-sm">
@@ -28,6 +36,7 @@ function AdminSettingsAllowDownload({ partyData }: { partyData: Party }) {
       <Switch
         checked={allowDownload}
         onCheckedChange={() => updateAllowDownloadMutation.mutate()}
+        disabled={!hasPermission}
       />
     </div>
   );

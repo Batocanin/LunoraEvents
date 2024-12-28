@@ -39,6 +39,7 @@ model Party {
   dateEndTime String
   active Boolean @default(true)
   slug String? @unique
+  planId String
 
   userId String
   settingsId String @unique
@@ -47,6 +48,7 @@ model Party {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  plan Plan @relation(references: [id], fields: [planId])
   photos PartyMedia[]
   zips PartyZip[]
 
@@ -54,6 +56,33 @@ model Party {
   user      User     @relation(references: [id], fields: [userId])
 
   @@map("party")
+}
+
+model Permission {
+  id String @id @default(cuid())
+  name String @unique
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  plans Plan[]
+
+  @@map("party_permissions")
+}
+
+model Plan {
+  id String @id @default(cuid())
+  name String @unique
+  description String?
+  variantId Int @unique
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  permissions Permission[] 
+  partys Party[]
+
+  @@map("party_plan")
 }
 
 model PartyMedia {

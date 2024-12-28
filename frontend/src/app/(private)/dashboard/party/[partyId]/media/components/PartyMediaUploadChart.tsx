@@ -17,8 +17,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import PartySettingsUpgradePlanDialog from "../../../shared/components/PartySettingsUpgradePlanDialog";
+import { PartyPlan } from "@/lib/types";
 
-function PartyMediaUploadChart() {
+function PartyMediaUploadChart({ partyPlan }: { partyPlan: PartyPlan }) {
   const chartData = [
     { browser: "safari", visitors: 5, fill: "var(--color-safari)" },
   ];
@@ -35,7 +36,9 @@ function PartyMediaUploadChart() {
   return (
     <Card className="flex flex-col mt-4 w-full max-w-[362px]">
       <CardHeader className="items-center pb-0">
-        <CardTitle className="text-md">Upload Limit ( Free Plan )</CardTitle>
+        <CardTitle className="text-md">
+          Upload Limit ( {partyPlan.name} )
+        </CardTitle>
         <CardDescription>3 od 100 uploadovano</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
@@ -89,7 +92,9 @@ function PartyMediaUploadChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
-        <PartySettingsUpgradePlanDialog />
+        <PartySettingsUpgradePlanDialog
+          permissions={partyPlan.variantId === 644675}
+        />
       </CardFooter>
     </Card>
   );

@@ -33,7 +33,7 @@ function PartyCreateButton() {
       </DialogTrigger>
       <DialogContent
         onOpenAutoFocus={(e) => e.preventDefault()}
-        className="w-full max-w-[95%] h-full max-h-[95%]"
+        className="w-full md:max-w-[95%] h-full md:max-h-[95%]"
       >
         <VisuallyHidden>
           <DialogTitle />
@@ -43,6 +43,7 @@ function PartyCreateButton() {
           setFormData={setFormData}
           mutation={mutation}
           progress={progress}
+          setIsOpen={setIsOpen}
         />
       </DialogContent>
     </Dialog>

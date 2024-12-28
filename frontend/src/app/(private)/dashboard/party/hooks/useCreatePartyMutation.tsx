@@ -3,9 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { FilesToUpload } from "@/lib/types";
 import { PartyValues } from "@/lib/validation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import createPartyService from "../services/createPartyService";
 import getPresignedUploadUrlService from "../shared/services/getPresignedUploadUrlService";
 import uploadFileToR2 from "../shared/utils/uploadFileToR2";
 import createPartyPageMediaService from "../services/createPartyPageMediaService";
@@ -16,10 +14,8 @@ function useCreatePartyMutation(partyData: PartyValues) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({ partyId }: { partyId: string }) => {
       const filesToUpload: FilesToUpload[] = [];
-
-      const createdParty = await createPartyService(partyData);
 
       if (partyData.mainPhoto instanceof File) {
         filesToUpload.push({
@@ -40,7 +36,7 @@ function useCreatePartyMutation(partyData: PartyValues) {
 
       setProgress(10);
       const presignedUrls = await getPresignedUploadUrlService(
-        createdParty.data.id,
+        partyId,
         filesToUpload,
         "",
         (progressEvent) => {
@@ -51,8 +47,6 @@ function useCreatePartyMutation(partyData: PartyValues) {
           }
         }
       );
-
-      console.log(presignedUrls);
 
       let uploadProgress = 0;
       const totalFiles = filesToUpload.length;
@@ -94,7 +88,8 @@ function useCreatePartyMutation(partyData: PartyValues) {
 
       setProgress(80);
       const updatedParty = await createPartyPageMediaService(
-        createdParty.data.id,
+        partyId,
+        partyData,
         presignedUrls,
         (progressEvent) => {
           if (progressEvent.total) {
@@ -127,7 +122,7 @@ function useCreatePartyMutation(partyData: PartyValues) {
         }
       );
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
       console.log(error);
       const { dismiss } = toast({
         variant: "destructive",
@@ -138,7 +133,7 @@ function useCreatePartyMutation(partyData: PartyValues) {
               variant="secondary"
               onClick={() => {
                 dismiss();
-                mutation.mutate();
+                mutation.mutate({ partyId: variables.partyId });
               }}
             >
               Retry

@@ -12,12 +12,14 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UseMutationResult } from "@tanstack/react-query";
+import React from "react";
 
 interface PartyCreateDesignModal {
   formData: PartyValues;
   setFormData: React.Dispatch<React.SetStateAction<PartyValues>>;
-  mutation: UseMutationResult<any, Error, void>;
+  mutation: UseMutationResult<any, Error, { partyId: string }>;
   progress: number;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function PartyCreateDesignModal({
@@ -25,6 +27,7 @@ function PartyCreateDesignModal({
   setFormData,
   mutation,
   progress,
+  setIsOpen,
 }: PartyCreateDesignModal) {
   const form = useForm<PartyInfoValues>({
     resolver: zodResolver(PartyInfoSchema),
@@ -75,6 +78,9 @@ function PartyCreateDesignModal({
                   formData={formData}
                   setFormData={setFormData}
                   form={form}
+                  setIsOpen={setIsOpen}
+                  mutation={mutation}
+                  progress={progress}
                 />
               )}
             </div>
@@ -82,11 +88,8 @@ function PartyCreateDesignModal({
         </div>
       </main>
       <PartyCreateDesignFooter
-        form={form}
         currentStep={currentStep}
         setCurrentStep={setStep}
-        mutation={mutation}
-        progress={progress}
       />
     </div>
   );

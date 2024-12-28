@@ -1,6 +1,6 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { AllowMediaEnum, Party } from "@/lib/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PartySettingsUpgradePlanDialog from "../../../../shared/components/PartySettingsUpgradePlanDialog";
 import useUpdateAllowMedia from "../hooks/useUpdateAllowMedia";
 
@@ -8,6 +8,7 @@ function AdminSettingsAllowMedia({ partyData }: { partyData: Party }) {
   const {
     id: partyId,
     settings: { allowMedia },
+    plan: { permissions },
   } = partyData;
   const updateAllowMediaMutation = useUpdateAllowMedia();
 
@@ -15,6 +16,13 @@ function AdminSettingsAllowMedia({ partyData }: { partyData: Party }) {
     IMAGE: allowMedia === "BOTH" || allowMedia === "IMAGE",
     VIDEO: allowMedia === "BOTH" || allowMedia === "VIDEO",
   });
+
+  useEffect(() => {
+    setMediaSelection({
+      IMAGE: allowMedia === "BOTH" || allowMedia === "IMAGE",
+      VIDEO: allowMedia === "BOTH" || allowMedia === "VIDEO",
+    });
+  }, [allowMedia]);
 
   const handleMediaChange = (type: AllowMediaEnum, value: boolean | string) => {
     if (type === "VIDEO" && !mediaSelection.IMAGE) return;
@@ -33,13 +41,20 @@ function AdminSettingsAllowMedia({ partyData }: { partyData: Party }) {
     updateAllowMediaMutation.mutate({ partyId, status });
   };
 
+  const hasPermission = permissions.some(
+    (permission) => permission.name === "BOTH_MEDIA"
+  );
+
   return (
     <div className="flex items-center gap-12">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <h3 className="text-lg font-semibold">Dozvoljeni tipovi medija</h3>
           <div className="flex items-center gap-1">
-            <PartySettingsUpgradePlanDialog xs={true} />
+            <PartySettingsUpgradePlanDialog
+              xs={true}
+              permissions={hasPermission}
+            />
           </div>
         </div>
         <p className="text-muted-foreground text-sm">
@@ -66,6 +81,7 @@ function AdminSettingsAllowMedia({ partyData }: { partyData: Party }) {
               handleMediaChange(AllowMediaEnum.VIDEO, value)
             }
             className="h-5 w-5"
+            disabled={!hasPermission}
           />
           <p>Video</p>
         </div>

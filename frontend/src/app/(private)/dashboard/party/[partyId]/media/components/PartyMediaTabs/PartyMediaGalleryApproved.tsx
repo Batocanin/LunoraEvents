@@ -12,8 +12,6 @@ function PartyMediaGalleryApproved({ partyData }: { partyData: Party }) {
     status,
   } = useGetPartyApprovedMedias(partyData.id);
 
-  console.log(media);
-
   const partyMedia = media?.pages.flatMap((page) => page.partyMedias) || [];
   return (
     <PartyMediaGallery

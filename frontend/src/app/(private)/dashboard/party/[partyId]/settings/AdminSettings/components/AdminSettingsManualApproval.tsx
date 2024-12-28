@@ -5,6 +5,11 @@ import useUpdateManualApproval from "../hooks/useUpdateManualApproval";
 
 function AdminSettingsManualApproval({ partyData }: { partyData: Party }) {
   const updateManualApprovalMutation = useUpdateManualApproval(partyData.id);
+
+  const hasPermission = partyData.plan.permissions.some(
+    (permission) => permission.name === "MANUAL_APPROVAL"
+  );
+
   return (
     <div className="flex items-center gap-12">
       <div className="flex flex-col">
@@ -13,7 +18,10 @@ function AdminSettingsManualApproval({ partyData }: { partyData: Party }) {
             Ručno odobravanje uploadovanih slika i snimaka
           </h3>
           <div className="flex items-center gap-1">
-            <PartySettingsUpgradePlanDialog xs={true} />
+            <PartySettingsUpgradePlanDialog
+              xs={true}
+              permissions={hasPermission}
+            />
           </div>
         </div>
         <p className="text-muted-foreground text-sm">
@@ -23,6 +31,7 @@ function AdminSettingsManualApproval({ partyData }: { partyData: Party }) {
       <Switch
         checked={partyData.settings.manualApproval}
         onClick={() => updateManualApprovalMutation.mutate()}
+        disabled={!hasPermission}
       />
     </div>
   );

@@ -13,7 +13,7 @@ async function getPresignedUploadUrlService(
   } = await AxiosInstance.post(
     `/party/getPresignedUploadUrl`,
     {
-      partyId: partyId,
+      partyId,
       files: filesToUpload.map((file: FilesToUpload) => ({
         fileName: file.fileName,
         type: file.type,

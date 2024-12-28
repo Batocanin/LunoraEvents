@@ -2,6 +2,24 @@ import React from "react";
 import { PartyValues } from "./validation";
 import { AxiosError } from "axios";
 
+declare global {
+  interface Window {
+    createLemonSqueezy: () => void;
+    LemonSqueezy: {
+      Setup: (options: { eventHandler: (event: any) => void }) => void;
+      Refresh: () => void;
+      Url: {
+        Open: (url: string) => void;
+        Close: () => void;
+      };
+      Affiliate: {
+        GetID: () => string;
+        Build: (url: string) => string;
+      };
+    };
+  }
+}
+
 export type User = {
   id: string;
   email: string;
@@ -31,9 +49,30 @@ export interface Party {
   createdAt: Date;
   updatedAt: Date;
   settings: PartySettings;
+  plan: PartyPlan;
 }
 
-export interface PartySettings {
+export type PartyPlan = {
+  id: String;
+  name: String;
+  description: String;
+  variantId: Number;
+  active: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+
+  permissions: PartyPermission[];
+};
+
+export type PartyPermission = {
+  id: String;
+  name: String;
+  description: String;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type PartySettings = {
   id: String;
   themeColor: string;
   showBrand: boolean;
@@ -44,7 +83,7 @@ export interface PartySettings {
   allowMedia: AllowMediaEnum;
 
   updatedAt: Date;
-}
+};
 
 export type FilesToUpload = {
   fileName: string;
@@ -93,7 +132,6 @@ export interface PartyGalleryMedia {
   }[];
   pageParams: (string | null)[];
 }
-[];
 
 export enum AllowMediaEnum {
   IMAGE = "IMAGE",

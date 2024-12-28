@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -11,7 +11,13 @@ const port = process.env.PORT || 4000;
 
 app.use(cors({ credentials: true, origin: process.env.APPLICATION_URL }));
 app.use(express.urlencoded({ extended: true, limit: 10000 }));
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req: Request, res: Response, buf: Buffer) => {
+      req.rawBody = buf.toString();
+    },
+  })
+);
 
 app.use(cookieParser());
 

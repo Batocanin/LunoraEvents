@@ -5,7 +5,7 @@ import Link from "next/link";
 import useDownloadPartyPhoto from "../../shared/hooks/useDownloadPartyPhoto";
 
 function PartyHomePage({ partyData }: { partyData: Party }) {
-  const { id: partyId, title } = partyData;
+  const { id: partyId, title, plan } = partyData;
   const partyPageUrl = `${process.env.NEXT_PUBLIC_BASE_APP_URL}/party/${partyId}`;
 
   const useDownloadPartyPhotoMutation = useDownloadPartyPhoto(partyId);
@@ -15,7 +15,7 @@ function PartyHomePage({ partyData }: { partyData: Party }) {
       <div className="space-y-1 mt-6">
         <h1 className="text-2xl font-bold">{title}</h1>
         <div className="w-fit px-2 py-0.5 rounded-2xl bg-primary text-primary-foreground font-semibold ">
-          <p className="text-xs">Free plan</p>
+          <p className="text-xs">{plan.name}</p>
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -79,7 +79,7 @@ function PartyCreateDesignForm({
             render={({ field }) => (
               <FormItem className="flex flex-col self-end space-y-1">
                 <FormLabel>Datum pocetka proslave</FormLabel>
-                <Popover>
+                <Popover modal={true}>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button

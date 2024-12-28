@@ -7,6 +7,7 @@ import { Session, User } from "@prisma/client";
 import prisma from "../../lib/prisma";
 import { Response } from "express";
 import { UserWithoutPassword } from "../../types/authTypes";
+import crypto from "crypto";
 
 export function generateSessionToken(): string {
   const bytes = new Uint8Array(20);
@@ -76,8 +77,9 @@ export function setSessionTokenCookie(
 ) {
   res.cookie("session", token, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: false,
+    sameSite: "none", // staviti lax, none sam stavio zbog port forwarding
+    secure: true, // mora biti true na https a false na http
+    domain: "euw.devtunnels.ms",
     expires: expiresAt,
     path: "/",
   });

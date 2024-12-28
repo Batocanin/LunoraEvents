@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Camera, Heart } from "lucide-react";
 import Image from "next/image";
-import GalleryImage from "../../../../../components/GalleryImage";
 
 const images = [
   {
@@ -103,9 +102,7 @@ function page() {
         </div>
       </div>
       <div className="grid auto-rows-[10px] px-1 my-3 grid-cols-[repeat(auto-fit,minmax(170px,1fr))] sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] lg:grid-cols-[repeat(auto-fit,minmax(350px,1fr))]">
-        {images.map((image) => {
-          return <GalleryImage key={image.id} photo={image} />;
-        })}
+        {/* Galerija */}
       </div>
     </div>
   );

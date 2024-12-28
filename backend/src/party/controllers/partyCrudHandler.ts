@@ -9,28 +9,25 @@ import {
 import { getAllParties, getPartyByPartyId } from "../models/partyCrudModel";
 import { AppError } from "../../utils/customError";
 
-export const createPartyHandler = async (req: Request, res: Response) => {
-  try {
-    const { id: userId } = req.user;
-    const { partyData } = req.body;
+// export const createPartyHandler = async (req: Request, res: Response) => {
+//   try {
+//     const { id: userId } = req.user;
 
-    const { ...values } = PartySchema.parse(partyData);
+//     const createdParty = await createParty(userId);
 
-    const createdParty = await createParty(userId, values);
-
-    res.status(200).send({
-      success: true,
-      message: "Proslava je uspešno kreirana.",
-      data: createdParty,
-    });
-  } catch (error) {
-    formatErrorResponse(
-      res,
-      "Dogodila se greška prilikom kreiranje stranice proslave.",
-      error instanceof Error ? error : null
-    );
-  }
-};
+//     res.status(200).send({
+//       success: true,
+//       message: "Proslava je uspešno kreirana.",
+//       data: createdParty,
+//     });
+//   } catch (error) {
+//     formatErrorResponse(
+//       res,
+//       "Dogodila se greška prilikom kreiranje stranice proslave.",
+//       error instanceof Error ? error : null
+//     );
+//   }
+// };
 
 export const getPartyHandler = async (req: Request, res: Response) => {
   try {

@@ -5,7 +5,6 @@ import { Party } from "@/lib/types";
 import PartyMediaUploadDialog from "./components/PartyMediaUploadDialog";
 import PartyMediaUploadChart from "./components/PartyMediaUploadChart";
 import useGetPartyMedias from "./hooks/useGetPartyMedias";
-import PartyMediaGallery from "./components/PartyMediaGallery/PartyMediaGallery";
 import PartyMediaTabs from "./components/PartyMediaTabs/PartyMediaTabs";
 
 function PartyMediaPage({ partyData }: { partyData: Party }) {
@@ -37,7 +36,7 @@ function PartyMediaPage({ partyData }: { partyData: Party }) {
           <PartyMediaUploadDialog partyData={partyData} />
         </CardContent>
       </Card>
-      <PartyMediaUploadChart />
+      <PartyMediaUploadChart partyPlan={partyData.plan} />
       <PartyMediaTabs partyData={partyData} />
     </>
   );

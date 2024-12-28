@@ -20,7 +20,7 @@ function PartySettingsFreePlanAlert() {
         </p>
       </div>
       <div className="flex items-center gap-3 flex-grow justify-end">
-        <PartySettingsUpgradePlanDialog />
+        <PartySettingsUpgradePlanDialog permissions={false} />
         <X className="cursor-pointer" onClick={() => setIsOpen(false)} />
       </div>
     </div>
